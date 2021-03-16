@@ -1,12 +1,12 @@
 <template lang="pug">
 .product-item
     .product-item-info {{ product.name }}({{ product.quantity }})
-    .product-item-price {{ product.price }}
+    .product-item-price(:class="{ [priceDirection]: priceDirection }") {{ product.price }}
 </template>
 
 <script>
 import Product from '@/models/Product'
-import { watch } from '@nuxtjs/composition-api'
+import { watch, ref } from '@nuxtjs/composition-api'
 
 export default {
     name: 'ProductItem',
@@ -18,9 +18,21 @@ export default {
     },
 
     setup(props) {
-        watch(() => props.product.price, () => {
-            console.log('@@@ price changed')
+        const priceDirection = ref(null)
+
+        watch(() => props.product.price, (newVal, oldVal) => {
+            if (newVal === oldVal) {
+                return
+            }
+            priceDirection.value = newVal > oldVal ? 'up' : 'down'
+            setTimeout(() => {
+                priceDirection.value = null
+            }, 3000)
         })
+
+        return {
+            priceDirection,
+        }
     },
 }
 </script>
@@ -28,9 +40,11 @@ export default {
 <style lang="stylus" scoped>
 .product-item
     display flex
+
     .product-item-info
         flex-grow 1
         padding 5px 12px
+
     .product-item-price
         width 90px
         display flex
@@ -39,4 +53,10 @@ export default {
         background-color #f3f3f3
         flex-shrink 0
         font-weight 700
+
+        &.up
+            color #1caf50
+
+        &.down
+            color #d13e47
 </style>
