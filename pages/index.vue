@@ -1,15 +1,16 @@
 <template lang="pug">
-.product-sections
-    .product-sections-col(
-        v-for="colNum in countCols"
-        :key="`product-sections-col-${colNum}`"
-    )
-        SectionItem(
-            v-for="sectionItem in sectionList.filter((_, index) => index % countCols === colNum - 1)"
-            :key="`section-item-${sectionItem.id}`"
-            :sectionId="sectionItem.id"
-            :label="sectionItem.name"
+.main-container
+    .product-sections
+        .product-sections-col(
+            v-for="colNum in countCols"
+            :key="`product-sections-col-${colNum}`"
         )
+            SectionItem(
+                v-for="sectionItem in sectionList.filter((_, index) => index % countCols === colNum - 1)"
+                :key="`section-item-${sectionItem.id}`"
+                :sectionId="sectionItem.id"
+                :label="sectionItem.name"
+            )
 </template>
 
 <script>

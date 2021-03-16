@@ -26,9 +26,12 @@ export default {
 
 <style lang="stylus" scoped>
 .section-item
-    &:not([open]) summary
-        border-radius 5px
-        border 1px solid #888
+    &:not([open])
+        summary
+            border-radius 5px
+            border 1px solid #888
+            &:before
+                transform rotate(180deg)
     summary
         border-top-left-radius 5px
         border-top-right-radius 5px
@@ -40,4 +43,12 @@ export default {
         font-weight 600
         user-select none
         cursor pointer
+        list-style-type none
+
+        &:before
+            position relative
+            display inline-block
+            content '▲'
+            font-family sans-serif
+            margin-right 5px
 </style>
