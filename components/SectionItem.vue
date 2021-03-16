@@ -1,23 +1,23 @@
 <template lang="pug">
 details.section-item(open)
-    summary {{ label }}
-    ProductTable(:sectionId="sectionId")
+    summary {{ section.name }}
+    ProductTable(:sectionId="section.id")
 </template>
 
 <script>
 import ProductTable from '@/components/ProductTable.vue'
+import Section from '@/models/Section'
+
 export default {
     name: 'SectionItem',
+
     components: {
         ProductTable,
     },
+
     props: {
-        sectionId: {
-            type: Number,
-            required: true,
-        },
-        label: {
-            type: String,
+        section: {
+            type: Section,
             required: true,
         },
     },
@@ -32,6 +32,7 @@ export default {
             border 1px solid #888
             &:before
                 transform rotate(180deg)
+
     summary
         border-top-left-radius 5px
         border-top-right-radius 5px

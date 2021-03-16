@@ -10,6 +10,7 @@ import { watch, ref } from '@nuxtjs/composition-api'
 
 export default {
     name: 'ProductItem',
+
     props: {
         product: {
             type: Product,

@@ -8,8 +8,7 @@
             SectionItem(
                 v-for="sectionItem in sectionList.filter((_, index) => index % countCols === colNum - 1)"
                 :key="`section-item-${sectionItem.id}`"
-                :sectionId="sectionItem.id"
-                :label="sectionItem.name"
+                :section="sectionItem"
             )
 </template>
 
@@ -23,6 +22,7 @@ import {
 } from '@nuxtjs/composition-api'
 import Section from '@/models/Section'
 import SectionItem from '@/components/SectionItem'
+
 export default defineComponent({
     components: {
         SectionItem,
@@ -37,6 +37,7 @@ export default defineComponent({
 
         const countCols = ref(2)
         const sectionList = computed(() => Section.query().has('products').get())
+
         return {
             sectionList,
             countCols,
@@ -49,10 +50,13 @@ export default defineComponent({
 .product-sections
     display flex
     padding 10px
+
 .product-sections-col
     flex 1
+
     &:not(:first-child)
         margin-left 10px
+
     & > *:not(:first-child)
         margin-top 5px
 </style>
