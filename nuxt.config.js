@@ -1,4 +1,12 @@
 export default {
+    build: {
+        babel: {
+            plugins: [
+                '@babel/plugin-proposal-optional-chaining',
+            ],
+        },
+    },
+
     head: {
         title: 'Goods',
         htmlAttrs: {
