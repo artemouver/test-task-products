@@ -6,6 +6,7 @@
 
 <script>
 import Product from '@/models/Product'
+import { watch } from '@nuxtjs/composition-api'
 
 export default {
     name: 'ProductItem',
@@ -14,6 +15,12 @@ export default {
             type: Product,
             required: true,
         },
+    },
+
+    setup(props) {
+        watch(() => props.product.price, () => {
+            console.log('@@@ price changed')
+        })
     },
 }
 </script>

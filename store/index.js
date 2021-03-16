@@ -7,8 +7,25 @@ import Product from '@/models/Product'
 
 export const actions = {
     async init() {
-        const [sectionList, productList] = await Promise.all([api.getSectionList(), api.getProductList()])
-        await Promise.all([Section.create({ data: sectionList }), Product.create({ data: productList })])
+        const [
+            sectionList,
+            productList,
+        ] = await Promise.all([
+            api.getSectionList(),
+            api.getProductList(),
+        ])
+        await Promise.all([
+            Section.create({ data: sectionList }),
+            Product.create({ data: productList }),
+        ])
+    },
+
+    startBroadcast() {
+        const eventListener = api.startBroadcast()
+
+        eventListener.addListener('productList', (data) => {
+            Product.create({ data })
+        })
     },
 }
 

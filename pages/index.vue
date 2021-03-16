@@ -33,6 +33,8 @@ export default defineComponent({
         onServerPrefetch(async () => {
             await store.dispatch('init')
         })
+        store.dispatch('startBroadcast')
+
         const countCols = ref(2)
         const sectionList = computed(() => Section.query().has('products').get())
         return {
