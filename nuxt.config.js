@@ -37,8 +37,6 @@ export default {
         '@/assets/styles/index.styl',
     ],
 
-    components: true,
-
     buildModules: [
         '@nuxtjs/eslint-module',
         '@nuxtjs/composition-api',
