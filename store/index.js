@@ -12,6 +12,10 @@ export const actions = {
     },
 }
 
+export const getters = {
+    getProductListBySectionId: () => sectionId => Product.query().where('sectionId', sectionId).get(),
+}
+
 export const plugins = [
     VuexORM.install(database),
 ]
