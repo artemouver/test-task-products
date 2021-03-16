@@ -18,7 +18,7 @@ const getProductList = async () => {
     return data.Value?.Goods?.map?.(product => ({
         id: product.T,
         sectionId: product.G,
-        name: names[product.G][product.T],
+        name: names[product.G].B[product.T].N,
         price: product.C,
         quantity: product.P,
     }))
