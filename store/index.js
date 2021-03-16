@@ -24,7 +24,7 @@ export const actions = {
         const eventListener = api.startBroadcast()
 
         eventListener.addListener('productList', (data) => {
-            Product.create({ data })
+            Product.insertOrUpdate({ data })
         })
     },
 }
