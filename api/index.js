@@ -1,4 +1,4 @@
-export const getSectionList = async () => {
+const getSectionList = async () => {
     const { default: names } = await import('@/assets/data/names.json')
     return Object.entries(names)
         .map(([sectionId, section]) => ({
@@ -7,7 +7,7 @@ export const getSectionList = async () => {
         }))
 }
 
-export const getProductList = async () => {
+const getProductList = async () => {
     const [
         { default: data },
         { default: names },
@@ -22,4 +22,9 @@ export const getProductList = async () => {
         price: product.C,
         quantity: product.P,
     }))
+}
+
+export default {
+    getSectionList,
+    getProductList,
 }
