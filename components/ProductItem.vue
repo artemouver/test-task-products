@@ -12,10 +12,11 @@ import Product from '@/models/Product'
 import {
     watch,
     ref,
-    useContext,
     computed,
 } from '@nuxtjs/composition-api'
 import CartProduct from '@/models/CartProduct'
+import useCartOperations from '@/hooks/useCartOperations'
+import useCurrency from '@/hooks/useCurrency'
 
 export default {
     name: 'ProductItem',
@@ -30,9 +31,8 @@ export default {
     setup(props) {
         const priceDirection = ref(null)
 
-        const { store } = useContext()
-
-        const currency = computed(() => store.state.currency)
+        const { currency } = useCurrency()
+        const { toggleCartProduct } = useCartOperations()
 
         watch(() => props.product.price[currency.value], (newVal, oldVal) => {
             if (newVal === oldVal) {
@@ -43,8 +43,6 @@ export default {
                 priceDirection.value = null
             }, 3000)
         })
-
-        const toggleCartProduct = async productId => await store.dispatch('cart/toggleCartProduct', productId)
 
         const active = computed(() => CartProduct.query().where('productId', props.product.id).exists())
 

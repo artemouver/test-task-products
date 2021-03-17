@@ -6,7 +6,7 @@
     )
         ProductSectionItem(
             v-for="productSectionItem in getFilteredProductSectionListByColumnNum(columnNum)"
-            :key="`section-item-${productSectionItem.id}`"
+            :key="productSectionItem.id"
             :section="productSectionItem"
         )
 </template>
@@ -17,9 +17,7 @@ import {
     ref,
     computed,
 } from '@nuxtjs/composition-api'
-
 import Section from '@/models/Section'
-
 import ProductSectionItem from '@/components/ProductSectionItem.vue'
 
 export default defineComponent({

@@ -1,18 +1,19 @@
-import EventListener from '@/models/EventListener'
+import EventSubscriber from '@/models/EventSubscriber'
 
 export default class BroadcastEmitter {
     constructor() {
         this.listeners = new Map()
     }
 
-    addListener(event, cb) {
+    addEventListener(event, cb) {
         if (!this.listeners.has(event)) {
             this.listeners.set(event, new Set())
         }
         this.listeners.get(event).add(cb)
+        return this
     }
 
-    removeListener(event, cb) {
+    removeEventListener(event, cb) {
         if (!this.listeners.has(event) || !this.listeners.get(event).has(cb)) {
             return
         }
@@ -20,6 +21,7 @@ export default class BroadcastEmitter {
         if (!this.listeners.get(event).size) {
             this.listeners.delete(event)
         }
+        return this
     }
 
     broadcast(event, value) {
@@ -30,7 +32,7 @@ export default class BroadcastEmitter {
         return this
     }
 
-    createListener() {
-        return new EventListener(this.addListener.bind(this), this.removeListener.bind(this))
+    createSubscriber() {
+        return new EventSubscriber(this.addEventListener.bind(this), this.removeEventListener.bind(this))
     }
 }

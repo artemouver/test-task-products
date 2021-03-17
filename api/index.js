@@ -50,7 +50,7 @@ const startBroadcast = () => {
     setInterval(async () => {
         broadcastEmitter.broadcast('productList', await getProductList())
     }, BROADCAST_TIMEOUT)
-    return broadcastEmitter.createListener()
+    return broadcastEmitter.createSubscriber()
 }
 
 export default {

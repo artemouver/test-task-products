@@ -1,5 +1,5 @@
 <template lang="pug">
-table.cart
+table.cart-table
     colgroup
         col(span="1" style="width: 50%;")
         col(span="1" style="width: 15%;")
@@ -10,7 +10,7 @@ table.cart
             td
                 h1.section-title Корзина
     tbody(v-if="productCartList.length")
-        tr
+        tr.cart-labels
             th Наименование товара и описание
             th Количество
             th Цена
@@ -18,7 +18,8 @@ table.cart
             v-for="productCartItem in productCartList"
             :key="productCartItem.id"
         )
-            td.cart-product-name {{ productCartItem.product.section.name }}. {{ productCartItem.product.name }}
+            td.cart-product-name
+                | {{ productCartItem.product.section.name }}. {{ productCartItem.product.name }}
             td.cart-product-nums
                 input.input-counter(
                     :value="productCartItem.num"
@@ -48,51 +49,32 @@ table.cart
 <script>
 import {
     defineComponent,
-    useContext,
     computed,
 } from '@nuxtjs/composition-api'
-import { minmax } from '@/utils'
-
 import CartProduct from '@/models/CartProduct'
+import useCurrency from '@/hooks/useCurrency'
+import useCartOperations from '@/hooks/useCartOperations'
 
 export default defineComponent({
     name: 'ProductCart',
 
     setup() {
-        const { store } = useContext()
+        const {
+            setCartProductNums,
+            deleteCartProduct,
+        } = useCartOperations
 
-        const currency = computed(() => store.state.currency)
+        const productCartList = computed(() => CartProduct.query().withAllRecursive(2).all())
 
-        const productCartList = computed(() => {
-            return CartProduct.query().withAllRecursive(2).all()
-        })
-
-        const setCartProductNums = (productCartItem, num) => {
-            store.dispatch('cart/setCartProductNums', {
-                productId: productCartItem.productId,
-                num: minmax(num, 1, productCartItem.product.quantity),
-            })
-        }
-
-        const amountFormatter = computed(() => new Intl.NumberFormat('ru', {
-            style: 'currency',
-            currency: currency.value,
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        }))
-
-        const formatAmount = value => amountFormatter.value.format(value)
-
-        const deleteCartProduct = async productId => await store.dispatch('cart/deleteCartProduct', productId)
-
+        const { formatAmount, currency } = useCurrency()
         const totalAmount = computed(() => productCartList.value
             .reduce((acc, cartProduct) => acc + cartProduct.num * cartProduct.product.price[currency.value], 0))
 
         return {
             productCartList,
             setCartProductNums,
-            formatAmount,
             deleteCartProduct,
+            formatAmount,
             totalAmount,
             currency,
         }
@@ -101,35 +83,16 @@ export default defineComponent({
 </script>
 
 <style lang="stylus" scoped>
-.cart
-    padding 15px
+.cart-table
     border-spacing 0
     width 100%
 
-    .section-title
-        padding-bottom 10px
+.section-title
+    padding-bottom 10px
 
-    th
-        text-align left
-        padding 10px 0
-
-    tbody.empty
-        text-align center
-        color #888
-
-        td
-            border 1px dotted #ff7f53
-            padding 5px
-
-    tfoot
-        td
-            padding-top 5px
-            text-align right
-
-            span
-                font-size 16px
-                font-weight 700
-                color #ff7f53
+.cart-labels th
+    text-align left
+    padding 10px 0
 
 .cart-product-row
     td
@@ -163,4 +126,22 @@ export default defineComponent({
 
 .cart-product-remove
     text-align right
+
+tbody.empty
+    text-align center
+    color #888
+
+    td
+        border 1px dotted #ff7f53
+        padding 5px
+
+tfoot
+    td
+        padding-top 5px
+        text-align right
+
+        span
+            font-size 16px
+            font-weight 700
+            color #ff7f53
 </style>

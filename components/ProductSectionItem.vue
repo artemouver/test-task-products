@@ -30,6 +30,7 @@ export default {
         summary
             border-radius 5px
             border 1px solid #888
+
             &:before
                 transform rotate(180deg)
 

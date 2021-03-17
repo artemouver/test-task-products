@@ -3,19 +3,19 @@
     section.products
         h1.section-title Продукты
         ProductSectionList
-    section.product-cart
+    section.cart
         ProductCart
 </template>
 
 <script>
 import {
     defineComponent,
-    useContext,
     onServerPrefetch,
 } from '@nuxtjs/composition-api'
 
 import ProductSectionList from '@/components/ProductSectionList.vue'
 import ProductCart from '@/components/ProductCart.vue'
+import { useActions } from '@/hooks/useVuexHelpers'
 
 export default defineComponent({
     components: {
@@ -24,18 +24,21 @@ export default defineComponent({
     },
 
     setup() {
-        const { store } = useContext()
+        const { init, startBroadcast } = useActions(['init', 'startBroadcast'])
         onServerPrefetch(async () => {
-            await store.dispatch('init')
+            await init()
         })
-        store.dispatch('startBroadcast')
+        startBroadcast()
     },
 })
 </script>
 
 <style lang="stylus" scoped>
-.products
+.main-container
     padding 10px
+
+    & > *:not(:first-child)
+        margin-top 30px
 
 .section-title
     padding-bottom 10px

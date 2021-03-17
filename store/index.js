@@ -29,9 +29,9 @@ export const actions = {
     },
 
     startBroadcast() {
-        const eventListener = api.startBroadcast()
+        const eventSubscriber = api.startBroadcast()
 
-        eventListener.addListener('productList', (data) => {
+        eventSubscriber.addEventListener('productList', (data) => {
             Product.insertOrUpdate({ data })
         })
     },

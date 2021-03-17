@@ -2,16 +2,17 @@
 .product-table(:class="{ 'two-cols': !(productList.length % 2) }")
     ProductItem(
         v-for="product in productList"
-        :key="`product-item-${product.id}`"
+        :key="product.id"
         :product="product"
     )
 </template>
 
 <script>
-import { useContext, computed } from '@nuxtjs/composition-api'
+import { defineComponent, computed } from '@nuxtjs/composition-api'
 import ProductItem from '@/components/ProductItem.vue'
+import { useGetters } from '@/hooks/useVuexHelpers'
 
-export default {
+export default defineComponent({
     name: 'ProductTable',
 
     components: {
@@ -26,11 +27,11 @@ export default {
     },
 
     setup(props) {
-        const { store } = useContext()
-        const productList = computed(() => store.getters.getProductListBySectionId(props.sectionId))
+        const { getProductListBySectionId } = useGetters(['getProductListBySectionId'])
+        const productList = computed(() => getProductListBySectionId.value(props.sectionId))
         return { productList }
     },
-}
+})
 </script>
 
 <style lang="stylus" scoped>
