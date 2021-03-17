@@ -1,12 +1,21 @@
 <template lang="pug">
-.product-item
+.product-item(
+    :class="{ active }"
+    @click="toggleCartProduct(product.id)"
+)
     .product-item-info {{ product.name }}({{ product.quantity }})
     .product-item-price(:class="{ [priceDirection]: priceDirection }") {{ product.price }}
 </template>
 
 <script>
 import Product from '@/models/Product'
-import { watch, ref } from '@nuxtjs/composition-api'
+import {
+    watch,
+    ref,
+    useContext,
+    computed,
+} from '@nuxtjs/composition-api'
+import CartProduct from '@/models/CartProduct'
 
 export default {
     name: 'ProductItem',
@@ -31,8 +40,15 @@ export default {
             }, 3000)
         })
 
+        const { store } = useContext()
+        const toggleCartProduct = async productId => await store.dispatch('cart/toggleCartProduct', productId)
+
+        const active = computed(() => CartProduct.query().where('productId', props.product.id).exists())
+
         return {
             priceDirection,
+            toggleCartProduct,
+            active,
         }
     },
 }
@@ -41,6 +57,14 @@ export default {
 <style lang="stylus" scoped>
 .product-item
     display flex
+    cursor pointer
+    user-select none
+
+    &:hover:not(.active)
+        background-color alpha(#e4fff8, .7)
+
+    &.active
+        background-color alpha(#ffd373, .4)
 
     .product-item-info
         flex-grow 1
@@ -51,7 +75,7 @@ export default {
         display flex
         align-items center
         justify-content center
-        background-color #f3f3f3
+        background-color alpha(#000, .05)
         flex-shrink 0
         font-weight 700
 

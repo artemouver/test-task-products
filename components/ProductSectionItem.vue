@@ -9,7 +9,7 @@ import ProductTable from '@/components/ProductTable.vue'
 import Section from '@/models/Section'
 
 export default {
-    name: 'SectionItem',
+    name: 'ProductSectionItem',
 
     components: {
         ProductTable,

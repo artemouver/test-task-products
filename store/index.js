@@ -5,6 +5,10 @@ import api from '@/api'
 import Section from '@/models/Section'
 import Product from '@/models/Product'
 
+export const getters = {
+    getProductListBySectionId: () => sectionId => Product.query().where('sectionId', sectionId).get(),
+}
+
 export const actions = {
     async init() {
         const [
@@ -27,10 +31,6 @@ export const actions = {
             Product.insertOrUpdate({ data })
         })
     },
-}
-
-export const getters = {
-    getProductListBySectionId: () => sectionId => Product.query().where('sectionId', sectionId).get(),
 }
 
 export const plugins = [
