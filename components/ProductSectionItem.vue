@@ -6,7 +6,7 @@ details.section-item(open)
 
 <script>
 import ProductTable from '@/components/ProductTable.vue'
-import Section from '@/models/Section'
+import Section from '@/models/orm/Section'
 
 export default {
     name: 'ProductSectionItem',

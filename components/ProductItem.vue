@@ -8,13 +8,13 @@
 </template>
 
 <script>
-import Product from '@/models/Product'
+import Product from '@/models/orm/Product'
 import {
     watch,
     ref,
     computed,
 } from '@nuxtjs/composition-api'
-import CartProduct from '@/models/CartProduct'
+import CartProduct from '@/models/orm/CartProduct'
 import useCartOperations from '@/hooks/useCartOperations'
 import useCurrency from '@/hooks/useCurrency'
 

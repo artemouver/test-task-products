@@ -1,5 +1,5 @@
 import { Model } from '@vuex-orm/core'
-import Section from '@/models/Section'
+import Section from '@/models/orm/Section'
 
 export default class Product extends Model {
     static entity = 'products'

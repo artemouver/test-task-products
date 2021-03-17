@@ -1,4 +1,4 @@
-import CartProduct from '@/models/CartProduct'
+import CartProduct from '@/models/orm/CartProduct'
 
 export const actions = {
     async addCartProduct(store, productId) {

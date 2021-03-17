@@ -1,7 +1,7 @@
 import { Database } from '@vuex-orm/core'
-import Section from '@/models/Section'
-import Product from '@/models/Product'
-import CartProduct from '@/models/CartProduct'
+import Section from '@/models/orm/Section'
+import Product from '@/models/orm/Product'
+import CartProduct from '@/models/orm/CartProduct'
 
 const database = new Database()
 

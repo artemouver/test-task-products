@@ -17,7 +17,7 @@ import {
     ref,
     computed,
 } from '@nuxtjs/composition-api'
-import Section from '@/models/Section'
+import Section from '@/models/orm/Section'
 import ProductSectionItem from '@/components/ProductSectionItem.vue'
 
 export default defineComponent({

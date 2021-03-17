@@ -51,7 +51,7 @@ import {
     defineComponent,
     computed,
 } from '@nuxtjs/composition-api'
-import CartProduct from '@/models/CartProduct'
+import CartProduct from '@/models/orm/CartProduct'
 import useCurrency from '@/hooks/useCurrency'
 import useCartOperations from '@/hooks/useCartOperations'
 

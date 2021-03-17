@@ -1,8 +1,8 @@
 import VuexORM from '@vuex-orm/core'
 import database from '@/database'
 import api from '@/api'
-import Section from '@/models/Section'
-import Product from '@/models/Product'
+import Section from '@/models/orm/Section'
+import Product from '@/models/orm/Product'
 import { DEFAULT_CURRENCY } from '@/constants'
 
 export const state = () => ({
