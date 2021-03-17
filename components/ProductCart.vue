@@ -25,7 +25,7 @@ table.cart
                     type="number"
                     min="1"
                     :max="productCartItem.product.quantity"
-                    @input="setCartProductNums({ productId: productCartItem.productId, num: $event.target.value })"
+                    @input="setCartProductNums(productCartItem, $event.target.value)"
                 )
                 span шт.
                 .hint-limited(v-if="productCartItem.product.quantity <= 10") Количество ограничено
@@ -51,6 +51,7 @@ import {
     useContext,
     computed,
 } from '@nuxtjs/composition-api'
+import { minmax } from '@/utils'
 
 import CartProduct from '@/models/CartProduct'
 
@@ -60,26 +61,29 @@ export default defineComponent({
     setup() {
         const { store } = useContext()
 
+        const currency = computed(() => store.state.currency)
+
         const productCartList = computed(() => {
             return CartProduct.query().withAllRecursive(2).all()
         })
 
-        const setCartProductNums = (...args) => {
-            store.dispatch('cart/setCartProductNums', ...args)
+        const setCartProductNums = (productCartItem, num) => {
+            store.dispatch('cart/setCartProductNums', {
+                productId: productCartItem.productId,
+                num: minmax(num, 1, productCartItem.product.quantity),
+            })
         }
 
-        const amountFormatter = new Intl.NumberFormat('ru', {
+        const amountFormatter = computed(() => new Intl.NumberFormat('ru', {
             style: 'currency',
-            currency: 'RUB',
+            currency: currency.value,
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
-        })
+        }))
 
-        const formatAmount = value => amountFormatter.format(value)
+        const formatAmount = value => amountFormatter.value.format(value)
 
         const deleteCartProduct = async productId => await store.dispatch('cart/deleteCartProduct', productId)
-
-        const currency = computed(() => store.state.currency)
 
         const totalAmount = computed(() => productCartList.value
             .reduce((acc, cartProduct) => acc + cartProduct.num * cartProduct.product.price[currency.value], 0))
