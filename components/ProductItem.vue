@@ -4,7 +4,7 @@
     @click="toggleCartProduct(product.id)"
 )
     .product-item-info {{ product.name }}({{ product.quantity }})
-    .product-item-price(:class="{ [priceDirection]: priceDirection }") {{ product.price }}
+    .product-item-price(:class="{ [priceDirection]: priceDirection }") {{ product.price[currency] }}
 </template>
 
 <script>
@@ -30,7 +30,11 @@ export default {
     setup(props) {
         const priceDirection = ref(null)
 
-        watch(() => props.product.price, (newVal, oldVal) => {
+        const { store } = useContext()
+
+        const currency = computed(() => store.state.currency)
+
+        watch(() => props.product.price[currency.value], (newVal, oldVal) => {
             if (newVal === oldVal) {
                 return
             }
@@ -40,7 +44,6 @@ export default {
             }, 3000)
         })
 
-        const { store } = useContext()
         const toggleCartProduct = async productId => await store.dispatch('cart/toggleCartProduct', productId)
 
         const active = computed(() => CartProduct.query().where('productId', props.product.id).exists())
@@ -49,6 +52,7 @@ export default {
             priceDirection,
             toggleCartProduct,
             active,
+            currency,
         }
     },
 }

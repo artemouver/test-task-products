@@ -30,7 +30,7 @@ table.cart
                 span шт.
                 .hint-limited(v-if="productCartItem.product.quantity <= 10") Количество ограничено
             td.cart-product-price
-                span {{ formatAmount(productCartItem.product.price) }}
+                span {{ formatAmount(productCartItem.product.price[currency]) }}
                 |  / шт.
             td.cart-product-remove
                 button.cart-product-remove-button(@click="deleteCartProduct(productCartItem.productId)") Удалить
@@ -79,7 +79,10 @@ export default defineComponent({
 
         const deleteCartProduct = async productId => await store.dispatch('cart/deleteCartProduct', productId)
 
-        const totalAmount = computed(() => productCartList.value.reduce((acc, cartProduct) => acc + cartProduct.num * cartProduct.product.price, 0))
+        const currency = computed(() => store.state.currency)
+
+        const totalAmount = computed(() => productCartList.value
+            .reduce((acc, cartProduct) => acc + cartProduct.num * cartProduct.product.price[currency.value], 0))
 
         return {
             productCartList,
@@ -87,6 +90,7 @@ export default defineComponent({
             formatAmount,
             deleteCartProduct,
             totalAmount,
+            currency,
         }
     },
 })

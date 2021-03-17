@@ -4,6 +4,7 @@
 
 import { random, roundNumberToNDecimalPlaces } from '@/utils'
 import BroadcastEmitter from '@/models/BroadcastEmitter'
+import { BROADCAST_TIMEOUT, RUB, USD } from '@/constants'
 
 const getSectionList = async () => {
     const { default: names } = await import('@/assets/data/names.json')
@@ -14,23 +15,32 @@ const getSectionList = async () => {
         }))
 }
 
-const getUsdToRubExchangeRate = () => new Promise(resolve => resolve(random(20, 80)))
+const getExchangeRates = () => new Promise(resolve => resolve({
+    [RUB]: random(20, 80),
+    [USD]: 1,
+}))
 
 const getProductList = async () => {
     const [
         { default: data },
         { default: names },
-        usdToRubExchangeRate,
+        exchangeRates,
     ] = await Promise.all([
         import('@/assets/data/data.json'),
         import('@/assets/data/names.json'),
-        getUsdToRubExchangeRate(),
+        getExchangeRates(),
     ])
     return data.Value?.Goods?.map?.(product => ({
         id: product.T,
         sectionId: product.G,
         name: names[product.G].B[product.T].N,
-        price: roundNumberToNDecimalPlaces(usdToRubExchangeRate * product.C, 2),
+        price: Object.fromEntries(
+            Object.entries(exchangeRates)
+                .map(([currency, exchangeRate]) => [
+                    currency,
+                    roundNumberToNDecimalPlaces(product.C * exchangeRate, 2),
+                ]),
+        ),
         quantity: product.P,
     }))
 }
@@ -39,7 +49,7 @@ const startBroadcast = () => {
     const broadcastEmitter = new BroadcastEmitter()
     setInterval(async () => {
         broadcastEmitter.broadcast('productList', await getProductList())
-    }, 15000)
+    }, BROADCAST_TIMEOUT)
     return broadcastEmitter.createListener()
 }
 

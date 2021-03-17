@@ -1,9 +1,13 @@
 import VuexORM from '@vuex-orm/core'
 import database from '@/database'
-
 import api from '@/api'
 import Section from '@/models/Section'
 import Product from '@/models/Product'
+import { DEFAULT_CURRENCY } from '@/constants'
+
+export const state = () => ({
+    currency: DEFAULT_CURRENCY,
+})
 
 export const getters = {
     getProductListBySectionId: () => sectionId => Product.query().where('sectionId', sectionId).get(),

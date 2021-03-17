@@ -13,6 +13,7 @@ import {
     useContext,
     onServerPrefetch,
 } from '@nuxtjs/composition-api'
+
 import ProductSectionList from '@/components/ProductSectionList.vue'
 import ProductCart from '@/components/ProductCart.vue'
 

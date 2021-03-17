@@ -9,7 +9,7 @@ export default class Product extends Model {
             id: this.number(null),
             sectionId: this.number(null),
             name: this.string(''),
-            price: this.number(0),
+            price: this.attr(null),
             quantity: this.number(0),
             section: this.belongsTo(Section, 'sectionId'),
         }
