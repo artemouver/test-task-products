@@ -1,11 +1,11 @@
 <template lang="pug">
 .product-item(
     :class="{ active }"
-    @click="toggleCartProduct(product.id)"
+    @click="onProductClick"
     @animationend="clearPriceDirection"
 )
-    .product-item-info {{ product.name }}({{ product.quantity }})
-    .product-item-price(:class="{ [priceDirection]: priceDirection }") {{ product.price[currency] }}
+    .product-item-info {{ productName }}
+    .product-item-price(:class="{ [priceDirection]: priceDirection }") {{ price }}
 </template>
 
 <script>
@@ -30,11 +30,13 @@ export default {
     },
 
     setup(props) {
-        const priceDirection = ref(null)
-
         const { currency } = useCurrency()
-        const { toggleCartProduct } = useCartOperations()
 
+        const active = computed(() => CartProduct.query().where('productId', props.product.id).exists())
+        const productName = computed(() => `${props.product.name}(${props.product.quantity})`)
+        const price = computed(() => props.product.price[currency.value])
+
+        const priceDirection = ref(null)
         watch(() => props.product.price[currency.value], (newVal, oldVal) => {
             if (newVal === oldVal) {
                 return
@@ -42,18 +44,20 @@ export default {
             priceDirection.value = newVal > oldVal ? 'up' : 'down'
         })
 
+        const { toggleCartProduct } = useCartOperations()
+        const onProductClick = () => toggleCartProduct(props.product.id)
+
         const clearPriceDirection = () => {
             priceDirection.value = null
         }
 
-        const active = computed(() => CartProduct.query().where('productId', props.product.id).exists())
-
         return {
+            active,
+            productName,
+            price,
             priceDirection,
             clearPriceDirection,
-            toggleCartProduct,
-            active,
-            currency,
+            onProductClick,
         }
     },
 }

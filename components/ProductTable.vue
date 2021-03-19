@@ -1,5 +1,5 @@
 <template lang="pug">
-.product-table(:class="{ 'two-cols': !(productList.length % 2) }")
+.product-table(:class="{ 'two-cols': isTwoColumns }")
     ProductItem(
         v-for="product in productList"
         :key="product.id"
@@ -29,7 +29,11 @@ export default defineComponent({
     setup(props) {
         const { getProductListBySectionId } = useGetters(['getProductListBySectionId'])
         const productList = computed(() => getProductListBySectionId.value(props.sectionId))
-        return { productList }
+        const isTwoColumns = computed(() => !(productList.value.length % 2))
+        return {
+            productList,
+            isTwoColumns,
+        }
     },
 })
 </script>
