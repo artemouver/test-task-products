@@ -1,17 +1,12 @@
-# test-task-products
-
-## Build Setup
-
-```bash
-# install dependencies
-$ yarn install
-# serve with hot reload at localhost:3000
-$ yarn dev
-# build for production and launch server
-$ yarn build
-$ yarn start
-# generate static project
-$ yarn generate
-```
-
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+* Для работы со стором с точки зрения реляционной бд используется Vuex ORM.
+* Сделана прослойка для работы с api сервера
+* Для общения между клиентом и сервером сделано подобие общения по веб-сокетам.
+Для этого были реализованы классы BroadcastEmitter, который отвечает за
+транслирование событий подписчикам, и EventSubscriber, отвечающий за
+добавление и удаление слушателей на события
+* Реализованы хелперы для работы со стором - useState, useGetters, useMutations,
+useActions. Это было сделано из-за того, что vuex-composition-helpers
+по непонятной причине выдавал ошибки, скорее всего не транспилировался и
+transpile в nuxt.config.js не помог
+* Некоторые настройки были вынесены в константы, чтобы основной конфиг хранился
+в одном месте
