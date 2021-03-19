@@ -28,12 +28,23 @@ export const actions = {
         ])
     },
 
-    startBroadcast() {
-        const eventSubscriber = api.startBroadcast()
+    async clearInitData() {
+        await Promise.all([
+            Section.deleteAll(),
+            Product.deleteAll(),
+        ])
+    },
+
+    subscribeToUpdates() {
+        const eventSubscriber = api.subscribeToUpdates()
 
         eventSubscriber.addEventListener('productList', (data) => {
             Product.insertOrUpdate({ data })
         })
+    },
+
+    unsubscribeFromUpdates() {
+        api.unsubscribeFromUpdates()
     },
 }
 

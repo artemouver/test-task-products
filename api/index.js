@@ -45,16 +45,27 @@ const getProductList = async () => {
     }))
 }
 
-const startBroadcast = () => {
-    const broadcastEmitter = new BroadcastEmitter()
-    setInterval(async () => {
-        broadcastEmitter.broadcast('productList', await getProductList())
-    }, BROADCAST_TIMEOUT)
+let broadcastEmitter = null
+const eventIntervals = []
+
+const subscribeToUpdates = () => {
+    broadcastEmitter = new BroadcastEmitter()
+    eventIntervals.push(
+        setInterval(async () => {
+            broadcastEmitter.broadcast('productList', await getProductList())
+        }, BROADCAST_TIMEOUT),
+    )
     return broadcastEmitter.createSubscriber()
+}
+
+const unsubscribeFromUpdates = () => {
+    eventIntervals.forEach(clearInterval)
+    broadcastEmitter = null
 }
 
 export default {
     getSectionList,
     getProductList,
-    startBroadcast,
+    subscribeToUpdates,
+    unsubscribeFromUpdates,
 }

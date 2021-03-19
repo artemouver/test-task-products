@@ -10,7 +10,8 @@
 <script>
 import {
     defineComponent,
-    onServerPrefetch,
+    useFetch,
+    onBeforeUnmount,
 } from '@nuxtjs/composition-api'
 
 import ProductSectionList from '@/components/ProductSectionList.vue'
@@ -24,11 +25,25 @@ export default defineComponent({
     },
 
     setup() {
-        const { init, startBroadcast } = useActions(['init', 'startBroadcast'])
-        onServerPrefetch(async () => {
-            await init()
+        const {
+            init,
+            clearInitData,
+            subscribeToUpdates,
+            unsubscribeFromUpdates,
+        } = useActions([
+            'init',
+            'clearInitData',
+            'subscribeToUpdates',
+            'unsubscribeFromUpdates',
+        ])
+
+        useFetch(init)
+        subscribeToUpdates()
+
+        onBeforeUnmount(() => {
+            unsubscribeFromUpdates()
+            clearInitData()
         })
-        startBroadcast()
     },
 })
 </script>
