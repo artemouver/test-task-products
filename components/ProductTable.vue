@@ -30,6 +30,7 @@ export default defineComponent({
         const { getProductListBySectionId } = useGetters(['getProductListBySectionId'])
         const productList = computed(() => getProductListBySectionId.value(props.sectionId))
         const isTwoColumns = computed(() => !(productList.value.length % 2))
+
         return {
             productList,
             isTwoColumns,

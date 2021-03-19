@@ -48,12 +48,14 @@ export default defineComponent({
     },
 
     setup() {
+        const { formatAmount, currency } = useCurrency()
+
         const productCartList = computed(() => CartProduct.query().withAllRecursive(2).all())
 
-        const { formatAmount, currency } = useCurrency()
         const totalAmount = computed(() => productCartList.value
             .reduce((acc, cartProduct) => acc + cartProduct.num * cartProduct.product.price[currency.value], 0))
         const formattedTotalAmount = computed(() => formatAmount(totalAmount.value))
+
         const hasItems = computed(() => productCartList.value.length)
 
         return {

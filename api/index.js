@@ -2,10 +2,20 @@
  * Прослойка запросов к api, возвращающих данные в нормализованном виде
  */
 
-import { random, roundNumberToNDecimalPlaces } from '@/utils'
 import BroadcastEmitter from '@/models/BroadcastEmitter'
+import { random, roundNumberToNDecimalPlaces } from '@/utils'
 import { BROADCAST_TIMEOUT, RUB, USD } from '@/constants'
 
+/**
+ * Запрос списка разделов (групп) товаров
+ *
+ * @typedef Section
+ * @type Object
+ * @property {String} id
+ * @property {String} name
+ *
+ * @returns {Promise<Section[]>}
+ */
 const getSectionList = async () => {
     const { default: names } = await import('@/assets/data/names.json')
     return Object.entries(names)
@@ -15,11 +25,39 @@ const getSectionList = async () => {
         }))
 }
 
+/**
+ * Запрос курсов валют
+ *
+ * @typedef ExchangeRateMap
+ * @type Object
+ * @property {String} RUB
+ * @property {String} USD
+ *
+ * @returns {Promise<ExchangeRateMap>}
+ */
 const getExchangeRates = () => new Promise(resolve => resolve({
     [RUB]: random(20, 80),
     [USD]: 1,
 }))
 
+/**
+ * Запрос списка продуктов
+ *
+ * @typedef PriceMap
+ * @type Object
+ * @property {String} RUB
+ * @property {String} USD
+ *
+ * @typedef Product
+ * @type Object
+ * @property {Number} id
+ * @property {Number} sectionId
+ * @property {String} name
+ * @property {PriceMap} price
+ * @property {Number} quantity
+ *
+ * @returns {Promise<Product[]>}
+ */
 const getProductList = async () => {
     const [
         { default: data },
@@ -48,6 +86,14 @@ const getProductList = async () => {
 let broadcastEmitter = null
 const eventIntervals = []
 
+/**
+ * Подписка на некоторые события, приходящие с сервера.
+ * Своеобразная имитация веб-сокетов.
+ * Функция возвращает объект класса EventSubscriber,
+ * с помощью которого можно подписываться на определенные события
+ *
+ * @returns {EventSubscriber}
+ */
 const subscribeToUpdates = () => {
     broadcastEmitter = new BroadcastEmitter()
     eventIntervals.push(
@@ -58,6 +104,11 @@ const subscribeToUpdates = () => {
     return broadcastEmitter.createSubscriber()
 }
 
+/**
+ * Отписка от обновлений с сервера
+ *
+ * @returns {void}
+ */
 const unsubscribeFromUpdates = () => {
     eventIntervals.forEach(clearInterval)
     broadcastEmitter = null
