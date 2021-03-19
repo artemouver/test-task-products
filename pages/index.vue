@@ -12,6 +12,7 @@ import {
     defineComponent,
     useFetch,
     onBeforeUnmount,
+    onMounted,
 } from '@nuxtjs/composition-api'
 
 import ProductSectionList from '@/components/ProductSectionList.vue'
@@ -38,8 +39,7 @@ export default defineComponent({
         ])
 
         useFetch(init)
-        subscribeToUpdates()
-
+        onMounted(subscribeToUpdates)
         onBeforeUnmount(() => {
             unsubscribeFromUpdates()
             clearInitData()
