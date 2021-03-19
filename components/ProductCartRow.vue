@@ -3,11 +3,10 @@ tr.cart-product-row
     td.cart-product-name {{ productName }}
     td.cart-product-nums
         input.input-counter(
-            :value="cartProduct.num"
+            v-model="productNum"
             type="number"
             min="1"
             :max="cartProduct.product.quantity"
-            @input="onInputCartProductNums"
         )
         span шт.
         .hint-limited(v-if="isLimited") Количество ограничено
@@ -45,16 +44,18 @@ export default {
         const price = computed(() => props.cartProduct.product.price[currency.value])
         const formattedPrice = computed(() => formatAmount(price.value))
         const productName = computed(() => `${props.cartProduct.product.section.name}. ${props.cartProduct.product.name}`)
+        const productNum = computed({
+            get: () => props.cartProduct.num,
+            set: value => setCartProductNums(props.cartProduct, value),
+        })
         const isLimited = computed(() => props.cartProduct.product.quantity <= 10)
-
-        const onInputCartProductNums = e => setCartProductNums(props.cartProduct, e.target.value)
         const onClickRemoveButton = () => deleteCartProduct(props.cartProduct.productId)
 
         return {
             formattedPrice,
             productName,
+            productNum,
             isLimited,
-            onInputCartProductNums,
             onClickRemoveButton,
         }
     },
