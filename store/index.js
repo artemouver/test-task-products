@@ -43,10 +43,8 @@ export const actions = {
             Product.delete(product => !productIds.includes(product.id))
             Product.insertOrUpdate({ data })
         })
-    },
 
-    unsubscribeFromUpdates() {
-        api.unsubscribeFromUpdates()
+        return eventSubscriber.unsubscribe
     },
 }
 

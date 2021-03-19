@@ -83,8 +83,13 @@ const getProductList = async () => {
     }))
 }
 
-let broadcastEmitter = null
+const broadcastEmitter = new BroadcastEmitter()
 const eventIntervals = []
+eventIntervals.push(
+    setInterval(async () => {
+        broadcastEmitter.broadcast('productList', await getProductList())
+    }, BROADCAST_TIMEOUT),
+)
 
 /**
  * Подписка на некоторые события, приходящие с сервера.
@@ -95,28 +100,11 @@ const eventIntervals = []
  * @returns {EventSubscriber}
  */
 const subscribeToUpdates = () => {
-    broadcastEmitter = new BroadcastEmitter()
-    eventIntervals.push(
-        setInterval(async () => {
-            broadcastEmitter.broadcast('productList', await getProductList())
-        }, BROADCAST_TIMEOUT),
-    )
     return broadcastEmitter.createSubscriber()
-}
-
-/**
- * Отписка от обновлений с сервера
- *
- * @returns {void}
- */
-const unsubscribeFromUpdates = () => {
-    eventIntervals.forEach(clearInterval)
-    broadcastEmitter = null
 }
 
 export default {
     getSectionList,
     getProductList,
     subscribeToUpdates,
-    unsubscribeFromUpdates,
 }

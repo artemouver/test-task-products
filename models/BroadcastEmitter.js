@@ -14,23 +14,32 @@ export default class BroadcastEmitter {
     /**
      * Добавление слушателя
      */
-    addEventListener(event, cb) {
-        if (!this.listeners.has(event)) {
-            this.listeners.set(event, new Set())
+    addEventListener(subscriber, event, cb) {
+        if (!this.listeners.has(subscriber)) {
+            this.listeners.set(subscriber, new Map())
         }
-        this.listeners.get(event).add(cb)
+        const eventMap = this.listeners.get(subscriber)
+        if (!eventMap.has(event)) {
+            eventMap.set(event, new Set())
+        }
+        eventMap.get(event).add(cb)
     }
 
     /**
      * Удаление слушателя
      */
-    removeEventListener(event, cb) {
-        if (!this.listeners.has(event) || !this.listeners.get(event).has(cb)) {
+    removeEventListener(subscriber, event, cb) {
+        if (!this.listeners.get(subscriber)?.get(event)?.get(cb)) {
             return
         }
-        this.listeners.get(event).delete(cb)
-        if (!this.listeners.get(event).size) {
-            this.listeners.delete(event)
+        const eventMap = this.listeners.get(subscriber)
+        const cbSet = eventMap.get(event)
+        cbSet.delete(cb)
+        if (!cbSet.size) {
+            eventMap.delete(event)
+        }
+        if (!eventMap.size) {
+            this.listeners.delete(subscriber)
         }
     }
 
@@ -39,10 +48,12 @@ export default class BroadcastEmitter {
      * Возвращается this для создания цепочек
      */
     broadcast(event, value) {
-        if (!this.listeners.has(event)) {
-            return
+        for (const [, eventMap] of this.listeners) {
+            if (!eventMap.has(event)) {
+                continue
+            }
+            eventMap.get(event).forEach(cb => cb(value))
         }
-        this.listeners.get(event).forEach(cb => cb(value))
         return this
     }
 
@@ -52,6 +63,13 @@ export default class BroadcastEmitter {
      * @returns {EventSubscriber}
      */
     createSubscriber() {
-        return new EventSubscriber(this.addEventListener.bind(this), this.removeEventListener.bind(this))
+        return new EventSubscriber(this)
+    }
+
+    /**
+     * Удаление подписчика
+     */
+    removeSubscriber(subscriber) {
+        this.listeners.delete(subscriber)
     }
 }
