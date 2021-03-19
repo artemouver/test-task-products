@@ -1,5 +1,6 @@
 import { Model } from '@vuex-orm/core'
 import Section from '@/models/orm/Section'
+import CartProduct from '@/models/orm/CartProduct'
 
 export default class Product extends Model {
     static entity = 'products'
@@ -13,5 +14,9 @@ export default class Product extends Model {
             quantity: this.number(0),
             section: this.belongsTo(Section, 'sectionId'),
         }
+    }
+
+    static afterDelete(model) {
+        CartProduct.delete(cartProduct => cartProduct.productId === model.id)
     }
 }

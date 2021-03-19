@@ -39,6 +39,7 @@ export const actions = {
         const eventSubscriber = api.subscribeToUpdates()
 
         eventSubscriber.addEventListener('productList', (data) => {
+            Product.delete(product => !data.map(newProduct => newProduct.id).includes(product.id))
             Product.insertOrUpdate({ data })
         })
     },
