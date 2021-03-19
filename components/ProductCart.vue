@@ -62,7 +62,7 @@ export default defineComponent({
         const {
             setCartProductNums,
             deleteCartProduct,
-        } = useCartOperations
+        } = useCartOperations()
 
         const productCartList = computed(() => CartProduct.query().withAllRecursive(2).all())
 
