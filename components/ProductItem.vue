@@ -2,6 +2,7 @@
 .product-item(
     :class="{ active }"
     @click="toggleCartProduct(product.id)"
+    @animationend="clearPriceDirection"
 )
     .product-item-info {{ product.name }}({{ product.quantity }})
     .product-item-price(:class="{ [priceDirection]: priceDirection }") {{ product.price[currency] }}
@@ -39,15 +40,17 @@ export default {
                 return
             }
             priceDirection.value = newVal > oldVal ? 'up' : 'down'
-            setTimeout(() => {
-                priceDirection.value = null
-            }, 3000)
         })
+
+        const clearPriceDirection = () => {
+            priceDirection.value = null
+        }
 
         const active = computed(() => CartProduct.query().where('productId', props.product.id).exists())
 
         return {
             priceDirection,
+            clearPriceDirection,
             toggleCartProduct,
             active,
             currency,
@@ -82,8 +85,22 @@ export default {
         font-weight 700
 
         &.up
-            color #1caf50
+            animation up 3s
 
         &.down
-            color #d13e47
+            animation down 3s
+
+@keyframes up
+    from
+        color #1caf50
+
+    to
+        color #1caf50
+
+@keyframes down
+    from
+        color #d13e47
+
+    to
+        color #d13e47
 </style>
