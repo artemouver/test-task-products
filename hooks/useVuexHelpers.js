@@ -1,5 +1,5 @@
 /**
- * Пакет vuex-composition-helpers по какой-то причине не заработал
+ * Пакет vuex-composition-helpers по какой-то причине не заработал (подозреваю, что ts не транспилировался)
  * И transpile в nuxt config не помог
  */
 
