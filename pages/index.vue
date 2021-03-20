@@ -29,18 +29,18 @@ export default defineComponent({
         const {
             init,
             clearInitData,
-            subscribeToUpdates,
+            subscribeToProductListUpdate,
         } = useActions([
             'init',
             'clearInitData',
-            'subscribeToUpdates',
+            'subscribeToProductListUpdate',
         ])
 
         let unsubscribe
 
         useFetch(init)
         onMounted(() => {
-            unsubscribe = subscribeToUpdates()
+            unsubscribe = subscribeToProductListUpdate()
         })
         onBeforeUnmount(() => {
             unsubscribe()

@@ -35,7 +35,7 @@ export const actions = {
         ])
     },
 
-    subscribeToUpdates() {
+    subscribeToProductListUpdate() {
         const eventSubscriber = api.subscribeToUpdates()
 
         eventSubscriber.addEventListener('productList', (data) => {
